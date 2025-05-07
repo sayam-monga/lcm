@@ -1,0 +1,52 @@
+<pre><code>
+    clc
+    clear all
+    format short
+    c=[6 4 1 5;8 9 2 7;4 3 6 4];
+    s=[14 16 5];
+    d=[6 10 15 4];
+    m=size(c,1);
+    n=size(c,2);
+    if sum(s)==sum(d)
+        fprintf('Transportation problem is Balanced');
+    else
+        fprintf('Transportation problem is Unbalanced');
+        if sum(s)&lt;sum(d)
+            c(end+1, :)=zeros(1,length(d));
+            s(end+1)=sum(d)-sum(s);
+        else
+            c(:, end+1)=zeros(length(s),1);
+            d(end+1)=sum(s)-sum(d);
+        end
+    end
+    X=zeros(m,n);
+    Initial_c=c; 
+    for i=1:m
+        for j=1:n
+            cpq=min(c(:));
+            if cpq==Inf
+                break
+            end
+            [p,q]=find(cpq==c);
+            X(p,q)=min(s(p),d(q));
+            if X(p,q)==s(p)
+                d(q)=d(q)-s(p);
+                s(p)=s(p)-s(p);
+                c(p,:)=Inf;
+            else
+                s(p)=s(p)-d(q);
+                d(q)=d(q)-d(q);
+                c(:,q)=Inf;
+            end
+        end
+    end
+    z=0;
+    for i=1:m
+        for j=1:n
+            z=z+Initial_c(i,j)*X(i,j);
+        end
+    end
+    array2table(X)
+    fprintf("Total transportation cost is %f\n", z);
+    </code></pre>
+    
